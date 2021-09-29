@@ -81,7 +81,7 @@ public @interface Builder {
   public @interface Factory {}
 
   /**
-   * The same as {@link Factory}, but for constructors rather than static methods.
+   * The same as {@link Factory}, but for constructors or records rather than static methods.
    * 
    * <pre>
    * class Sum {
@@ -102,7 +102,7 @@ public @interface Builder {
    * Class level and package level style annotations fully supported (see {@link Style}).
    */
   @Documented
-  @Target(ElementType.CONSTRUCTOR)
+  @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
   public @interface Constructor {}
 
   @Documented

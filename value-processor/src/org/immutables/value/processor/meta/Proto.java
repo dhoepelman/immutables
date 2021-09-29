@@ -50,6 +50,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import org.immutables.generator.ClasspathFence;
 import org.immutables.generator.SourceExtraction;
@@ -1154,7 +1155,7 @@ public class Proto {
       if (!isTopLevel() || !suitableForBuilderConstructor(element)) {
         report().withElement(element)
             .annotationNamed(FConstructorMirror.simpleName())
-            .error("@%s annotated element should be non-private constructor in a top level type",
+            .error("@%s annotated element should be non-private constructor in a top level type or a record",
                 FConstructorMirror.simpleName(),
                 element.getSimpleName());
         return false;
@@ -1278,6 +1279,12 @@ public class Proto {
         enclosingTopLevel().get().collectEncodings(encodings);
       }
       super.collectEncodings(encodings);
+    }
+
+    public boolean isRecord() {
+      // When Java >= 16 becomes required, replace this method with
+      //return element().getKind() == ElementKind.RECORD;
+      return element().getKind().name().equals("RECORD");
     }
   }
 
