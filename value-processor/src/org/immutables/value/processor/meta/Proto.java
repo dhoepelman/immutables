@@ -1138,6 +1138,13 @@ public class Proto {
       return features().isPresent();
     }
 
+    @Value.Lazy
+    public boolean isRecord() {
+      // When Java >= 14 becomes required, replace this method with
+      //return element().getKind() == ElementKind.RECORD;
+      return element().getKind().name().equals("RECORD");
+    }
+
     boolean verifiedFactory(ExecutableElement element) {
       if (!isTopLevel() || !suitableForBuilderFactory(element)) {
         report().withElement(element)
@@ -1195,10 +1202,10 @@ public class Proto {
             .annotationNamed(EnclosingMirror.simpleName())
             .error("@%s should only be used on a top-level types.", EnclosingMirror.simpleName());
       }
-      if (isImmutable() && element().getKind() == ElementKind.ENUM) {
+      if (isImmutable() && (element().getKind() == ElementKind.ENUM || isRecord())) {
         report()
             .annotationNamed(ImmutableMirror.simpleName())
-            .error("@%s is not supported on enums", ImmutableMirror.simpleName());
+            .error("@%s is not supported on enums or records", ImmutableMirror.simpleName());
       }
       if (isModifiable() && (isEnclosed() || isEnclosing())) {
         report()
@@ -1279,13 +1286,6 @@ public class Proto {
         enclosingTopLevel().get().collectEncodings(encodings);
       }
       super.collectEncodings(encodings);
-    }
-
-    @Value.Lazy
-    public boolean isRecord() {
-      // When Java >= 14 becomes required, replace this method with
-      //return element().getKind() == ElementKind.RECORD;
-      return element().getKind().name().equals("RECORD");
     }
   }
 
