@@ -209,7 +209,7 @@ public abstract class Round {
         collectIncludedBy((PackageElement) element);
         break;
       default:
-        // Outside the switch on kind name, since RECORD is not available yet in JDK < 14
+        // Outside the switch, since ElementKind.RECORD is only available in JDK >= 14, and we support >= 8
         if(kind.name().equals("RECORD")) {
           collectIncludedAndDefinedBy((TypeElement) element);
         } else {

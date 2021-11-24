@@ -53,6 +53,7 @@
     <module>trees</module>
     <module>encode</module>
     <module>bom</module>
+    <module>testing-java17</module>
   </modules>
 
   <organization>
@@ -378,9 +379,9 @@
       </build>
     </profile>
     <profile>
-      <id>java16</id>
+      <id>java17</id>
       <activation>
-        <jdk>[16,)</jdk>
+        <jdk>[17,)</jdk>
       </activation>
       <build>
         <plugins>
