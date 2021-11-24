@@ -1202,10 +1202,10 @@ public class Proto {
             .annotationNamed(EnclosingMirror.simpleName())
             .error("@%s should only be used on a top-level types.", EnclosingMirror.simpleName());
       }
-      if (isImmutable() && (element().getKind() == ElementKind.ENUM || isRecord())) {
+      if (isImmutable() && element().getKind() == ElementKind.ENUM) {
         report()
             .annotationNamed(ImmutableMirror.simpleName())
-            .error("@%s is not supported on enums or records", ImmutableMirror.simpleName());
+            .error("@%s is not supported on enums", ImmutableMirror.simpleName());
       }
       if (isModifiable() && (isEnclosed() || isEnclosing())) {
         report()
