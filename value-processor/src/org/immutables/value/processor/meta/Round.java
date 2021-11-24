@@ -209,7 +209,7 @@ public abstract class Round {
         collectIncludedBy((PackageElement) element);
         break;
       default:
-        // Outside the switch, since ElementKind.RECORD is only available in JDK >= 14, and we support >= 8
+        // Outside the switch, since ElementKind.RECORD is only available in JDK >= 14, and we support 8 and 11
         if(kind.name().equals("RECORD")) {
           collectIncludedAndDefinedBy((TypeElement) element);
         } else {
@@ -332,12 +332,25 @@ public abstract class Round {
                       .build()));
             }
           }
-          collectBuilderConstructor(declaringType, includedType);
+          for (ExecutableElement c : ElementFilter.constructorsIn(includedType.getEnclosedElements())) {
+            if (DeclaringType.suitableForBuilderConstructor(c)) {
+              builder.add(interners.forProto(
+                  ImmutableProto.Protoclass.builder()
+                      .environment(environment())
+                      .packageOf(declaringType.packageOf())
+                      .declaringType(declaringType)
+                      .sourceElement(wrapElement(c))
+                      .kind(Kind.INCLUDED_CONSTRUCTOR_ON_TYPE)
+                      .build()));
+              // stop on first suitable
+              // don't have any good idea how to handle multiple
+              // constructor. CBuilder, C2Builder, C3Builder for
+              // class C seems even more crazy than stop on first suitable
+              // but this is debatable
+              break;
+            }
+          }
         }
-      }
-
-      if (declaringType.isRecord() && FConstructorMirror.isPresent(element)) {
-        collectBuilderConstructor(declaringType, element);
       }
 
       if (declaringType.isImmutable()
@@ -357,27 +370,6 @@ public abstract class Round {
       } else if (declaringType.isTopLevel()) {
         for (TypeElement nested : ElementFilter.typesIn(declaringType.element().getEnclosedElements())) {
           collectIncludedAndDefinedBy(nested);
-        }
-      }
-    }
-
-    private void collectBuilderConstructor(DeclaringType declaringType, TypeElement includedType) {
-      for (ExecutableElement c : ElementFilter.constructorsIn(includedType.getEnclosedElements())) {
-        if (DeclaringType.suitableForBuilderConstructor(c)) {
-          builder.add(interners.forProto(
-              ImmutableProto.Protoclass.builder()
-                  .environment(environment())
-                  .packageOf(declaringType.packageOf())
-                  .declaringType(declaringType)
-                  .sourceElement(wrapElement(c))
-                  .kind(Kind.INCLUDED_CONSTRUCTOR_ON_TYPE)
-                  .build()));
-          // stop on first suitable
-          // don't have any good idea how to handle multiple
-          // constructor. CBuilder, C2Builder, C3Builder for
-          // class C seems even more crazy than stop on first suitable
-          // but this is debatable
-          break;
         }
       }
     }

@@ -1155,7 +1155,7 @@ public class Proto {
       if (!isTopLevel() || !suitableForBuilderConstructor(element)) {
         report().withElement(element)
             .annotationNamed(FConstructorMirror.simpleName())
-            .error("@%s annotated element should be non-private constructor in a top level type or a record",
+            .error("@%s annotated element should be non-private constructor in a top level type",
                 FConstructorMirror.simpleName(),
                 element.getSimpleName());
         return false;
@@ -1281,8 +1281,9 @@ public class Proto {
       super.collectEncodings(encodings);
     }
 
+    @Value.Lazy
     public boolean isRecord() {
-      // When Java >= 16 becomes required, replace this method with
+      // When Java >= 14 becomes required, replace this method with
       //return element().getKind() == ElementKind.RECORD;
       return element().getKind().name().equals("RECORD");
     }
