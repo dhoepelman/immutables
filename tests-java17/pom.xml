@@ -25,10 +25,9 @@
 
   <artifactId>testing-java17</artifactId>
   <name>${project.groupId}.${project.artifactId}</name>
-  <description>Tests for Java 17 language features not available in Java 8 or 11. Not to be published</description>
+  <description>Testing module with source level of 17 for testing Records and Sealed Types. Not to be published</description>
 
   <properties>
-    <java.version>17</java.version>
     <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
