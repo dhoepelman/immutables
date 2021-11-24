@@ -59,6 +59,12 @@
   </dependencies>
 
   <build>
+    <testResources>
+      <!-- Deviate from the general setup to include .java files as resource -->
+      <testResource>
+        <directory>resources</directory>
+      </testResource>
+    </testResources>
     <pluginManagement>
       <plugins>
         <!-- Skip publishing this module -->
